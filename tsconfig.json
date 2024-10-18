@@ -1,0 +1,65 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "outDir": "./dist/out-tsc",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "ES2022",
+    "useDefineForClassFields": false,
+    "lib": [
+      "ES2022",
+      "dom",
+      "esnext.asynciterable"
+    ],
+    "baseUrl": "./src",
+    "paths": {
+      "@app/*": [
+        "app/*"
+      ],
+      "@domains/*": [
+        "app/domains/*"
+      ],
+      "@shared/*": [
+        "app/domains/shared/*"
+      ],
+      "@auth/*": [
+        "app/domains/auth/*"
+      ],
+      "@environments/*": [
+        "app/environments/*"
+      ],
+      "@interceptors/*": [
+        "app/interceptors/*"
+      ],
+      "@operations/*": [
+        "app/domains/shared/operations/*"
+      ],
+      "@services/*": [
+        "app/domains/shared/services/*"
+      ],
+      "@stores/*": [
+        "app/domains/shared/stores/*"
+      ]
+
+    },
+    "allowSyntheticDefaultImports": true
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  }
+}

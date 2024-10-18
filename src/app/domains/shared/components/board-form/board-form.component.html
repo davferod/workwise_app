@@ -1,0 +1,61 @@
+<form [formGroup]="boardForm" novalidate class="space-y-4" (ngSubmit)="doSave()">
+  <div>
+    <div class="relative">
+      <input formControlName="title" placeholder="Enter title" type="text"
+        class="w-full rounded bg-gray-100 border-gray-300 border-2" />
+    </div>
+    <div class="relative">
+      <div class="flex flex-wrap">
+        <div class="flex items-center me-4">
+          <input id="sky-radio" type="radio" value="sky" name="backgroundColor" formControlName="backgroundColor"
+            class="w-4 h-4 text-sky-600 bg-sky-100 border-gray-300 focus:ring-sky-500 dark:focus:ring-sky-600 ">
+          <label for="sky-radio" class="ms-2 text-sm font-medium text-gray-900 ">Sky</label>
+        </div>
+        <div class="flex items-center me-4">
+          <input id="green-radio" type="radio" value="green" name="backgroundColor" formControlName="backgroundColor"
+            class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 focus:ring-green-500 dark:focus:ring-green-600 ">
+          <label for="green-radio" class="ms-2 text-sm font-medium text-gray-900 ">Green</label>
+        </div>
+        <div class="flex items-center me-4">
+          <input checked id="violet-radio" type="radio" value="violet" name="backgroundColor"
+            formControlName="backgroundColor"
+            class="w-4 h-4 text-violet-600 bg-gray-100 border-gray-300 focus:ring-violet-500 dark:focus:ring-violet-600 ">
+          <label for="violet-radio" class="ms-2 text-sm font-medium text-gray-900 ">Violet</label>
+        </div>
+        <div class="flex items-center me-4">
+          <input id="indigo-radio" type="radio" value="indigo" name="backgroundColor" formControlName="backgroundColor"
+            class="w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 focus:ring-indigo-500 dark:focus:ring-indigo-600 ">
+          <label for="indigo-radio" class="ms-2 text-sm font-medium text-gray-900 ">Indigo</label>
+        </div>
+        <div class="flex items-center me-4">
+          <input id="yellow-radio" type="radio" value="yellow" name="backgroundColor" formControlName="backgroundColor"
+            class="w-4 h-4 text-yellow-400 bg-gray-100 border-gray-300 focus:ring-yellow-500 dark:focus:ring-yellow-600 ">
+          <label for="yellow-radio" class="ms-2 text-sm font-medium text-gray-900 ">Yellow</label>
+        </div>
+        <div class="flex items-center me-4">
+          <input id="blue-radio" type="radio" value="blue" name="backgroundColor" formControlName="backgroundColor"
+            class="w-4 h-4 text-blue-500 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 ">
+          <label for="blue-radio" class="ms-2 text-sm font-medium text-gray-900 ">Blue</label>
+        </div>
+        <div class="flex items-center me-4">
+          <input id="red-radio" type="radio" value="red" name="backgroundColor" formControlName="backgroundColor"
+            class="w-4 h-4 text-red-500 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 ">
+          <label for="red-radio" class="ms-2 text-sm font-medium text-gray-900 0">Red</label>
+        </div>
+        <div class="flex items-center me-4">
+          <input id="pink-radio" type="radio" value="pink" name="backgroundColor" formControlName="backgroundColor"
+            class="w-4 h-4 text-pink-500 bg-gray-100 border-gray-300 focus:ring-pink-500 dark:focus:ring-pink-600 ">
+          <label for="pink-radio" class="ms-2 text-sm font-medium text-gray-900 ">Pink</label>
+        </div>
+        <div class="flex items-center me-4">
+          <input id="gray-radio" type="radio" value="gray" name="backgroundColor" formControlName="backgroundColor"
+            class="w-4 h-4 text-gray-500 bg-gray-100 border-gray-300 focus:ring-gray-500 dark:focus:ring-gray-600 ">
+          <label for="gray-radio" class="ms-2 text-sm font-medium text-gray-900 ">Gray</label>
+        </div>
+      </div>
+    </div>
+    <app-button typeBtn="submit" color="success">
+      create
+    </app-button>
+  </div>
+</form>

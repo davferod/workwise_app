@@ -1,0 +1,88 @@
+<div
+  class="w-full bg-white rounded-lg shadow dark:border md:mt-0 max-w-3xl xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+  <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+    <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+      Datos De Perfil
+    </h1>
+    <form [formGroup]="profileForm" (ngSubmit)="updateProfile()" class="space-y-4 md:space-y-6" action="#">
+      <div class="grid gap-4 mb-4 grid-cols-2">
+        <div class="col-span-2 sm:col-span-1">
+          <label for="full_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre
+            Completo</label>
+          <input type="text" formControlName="full_name" id="full_name"
+            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Jhon Doe" required="">
+        </div>
+        <div class="col-span-2 sm:col-span-1">
+          <label for="cel_phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Numero de
+            Celular</label>
+          <input type="tel" formControlName="cel_phone" id="cel_phone" placeholder="3001123344"
+            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            required="">
+        </div>
+      </div>
+      <div class="grid gap-4 mb-4 grid-cols-3">
+        <div class="col-span-2 sm:col-span-1">
+          <label for="date_of_birth" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha de
+            Nacimiento</label>
+          <input type="date" formControlName="date_of_birth" id="date_of_birth" [max]="minDate"
+            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            required="">
+        </div>
+        <div class="col-span-2 sm:col-span-1">
+          <label for="gender" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Genero</label>
+          <select id="gender" formControlName="gender"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+            <option selected="">masculino</option>
+            <option value="femenino">femenino</option>
+          </select>
+        </div>
+        <div class="col-span-2 sm:col-span-1">
+          <label for="levelexp" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nivel de
+            Experiencia</label>
+          <select id="levelexp" formControlName="levelexp"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+            <option selected="">principiante</option>
+            <option value="intermedio">intermedio</option>
+            <option value="alto">alto</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-span-2">
+        <label for="health_history" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Notas de
+          Salud</label>
+        <textarea id="health_history" formControlName="health_history" rows="4"
+          class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Write down some relevant details to take into account about your health for training"></textarea>
+      </div>
+      <div formGroupName="associated_gym" class="grid gap-4 mb-4 grid-cols-2">
+        <div class="col-span-2 sm:col-span-1">
+          <label for="gym-name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">gimnasio al que
+            asiste</label>
+          <input type="text" formControlName="name" id="gym-name"
+            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Jhon Doe" required="">
+        </div>
+        <div class="col-span-2 sm:col-span-1">
+          <label for="gym-location" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">localizacion
+            del gimnasio</label>
+          <input type="text" formControlName="location" id="gym-location" placeholder="3001123344"
+            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            required="">
+        </div>
+      </div>
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="user_avatar">Upload
+          file</label>
+        <input
+          class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+          aria-describedby="user_avatar_help" id="user_avatar" type="file">
+        <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="user_avatar_help">A profile picture is useful to
+          confirm your are logged into your account</div>
+      </div>
+      <button type="button" (click)="updateProfile()"
+        class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Guardar
+        Perfil</button>
+    </form>
+  </div>
+</div>

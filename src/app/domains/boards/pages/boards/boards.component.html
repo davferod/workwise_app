@@ -1,0 +1,15 @@
+<div class="container mx-auto flex mt-10">
+  <app-sidebar/>
+  <div class="w-full">
+    <h1 class="text-lg font-bold mb-4"><fa-icon [icon]="faClock"></fa-icon> Recently viewed</h1>
+    <div class="grid grid-cols-4 gap-4">
+      @for (board of boardsData(); track board._id) {
+        <a [routerLink]="['/app/boards', board._id]" >
+          <app-card-color [color]="board.backgroundColor">
+              {{ board.title }}
+          </app-card-color>
+        </a>
+      }
+    </div>
+  </div>
+</div>

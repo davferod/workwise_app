@@ -1,0 +1,38 @@
+<nav class="order-first first-letter:w-1/5">
+  <div class="mr-4">
+    <ul class="flex flex-col font-medium text-gray-700">
+      <li>
+        <a routerLinkActive="underline" class="block bg-sky-100 rounded py-1 px-3 text-sky-700"><fa-icon [icon]="faTrello"></fa-icon> Boards</a>
+      </li>
+      <li>
+        <a routerLink="/app/anthropometric-measures" routerLinkActive="underline" class="block py-1 px-3"><fa-icon [icon]="faBox"></fa-icon> Registro de Medidas</a>
+      </li>
+      <li>
+        <a routerLink="/app/physical-test" routerLinkActive="underline" class="block py-1 px-3"><fa-icon [icon]="faBox"></fa-icon>Test Fisicos</a>
+      </li>
+      <li>
+        <a routerLink="/app/" routerLinkActive="underline" class="block py-1 px-3"><fa-icon [icon]="faWaveSquare"></fa-icon>Home</a>
+      </li>
+    </ul>
+    <cdk-accordion>
+      <cdk-accordion-item #accordionMenu="cdkAccordionItem">
+        <button class="w-full py-1 px-2 flex justify-between items-center" type="button" (click)="accordionMenu.toggle()">
+          My Workspace
+          <fa-icon [icon]="accordionMenu.expanded ? faAngleUp : faAngleDown"></fa-icon>
+        </button>
+        <div [ngClass]="{
+          hidden: !accordionMenu.expanded,
+          block: accordionMenu.expanded
+        }">
+        <ul class="ml-2 flex flex-col text-sm text-gray-700">
+          @for (item of workspaceMenu; track $index) {
+            <li>
+              <a class="block py-1 px-3"><fa-icon [icon]="item.icon"></fa-icon> {{ item.title }}</a>
+            </li>
+          }
+        </ul>
+      </div>
+      </cdk-accordion-item>
+    </cdk-accordion>
+</div>
+</nav>
