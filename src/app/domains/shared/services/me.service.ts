@@ -40,7 +40,7 @@ export class MeService {
       take(1),
       catchError(error => {
         console.error('Error updating profile:', error);
-        return of(null); // Puedes devolver un valor predeterminado o manejar el error de alguna manera
+        return of(null);
       }),
       tap(res => {
         if (res && res.data) {
@@ -49,8 +49,8 @@ export class MeService {
         } else {
           console.error('Error updating profile. Response:', res);
         }
-    })
-    ).subscribe();
+      })
+    );
   }
 
   getProfile() {
@@ -61,7 +61,7 @@ export class MeService {
       take(1),
       catchError(error => {
         console.error('Error fetching profile:', error);
-        return of(null); // Puedes devolver un valor predeterminado o manejar el error de alguna manera
+        return of(null);
       }),
       tap(res => {
         if (res && res.data && res.data.profile) {
@@ -70,8 +70,8 @@ export class MeService {
           console.error('Error fetching profile. Response:', res);
         }
       })
-    ).subscribe()
-  };
+    );
+  }
 
   getAllProfiles() {
     return this.apollo.watchQuery<{ profiles: Profile[] }>({
@@ -81,7 +81,7 @@ export class MeService {
       take(1),
       catchError(error => {
         console.error('Error fetching profile:', error);
-        return of(null); // Puedes devolver un valor predeterminado o manejar el error de alguna manera
+        return of(null);
       }),
       tap(res => {
         if (res && res.data && res.data.profiles) {
@@ -90,7 +90,7 @@ export class MeService {
           console.error('Error fetching profile. Response:', res);
         }
       })
-    ).subscribe()
-  };
+    );
+  }
 
 }
