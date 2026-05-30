@@ -35,34 +35,42 @@ export class TokenService {
     removeCookie('refresh_token-trello');
   }
 
-  isValidToken() {
-    const token = this.getToken();
-    console.log('token', token);
-    if (!token) {
-      return false
+  isValidToken(): boolean {
+    try {
+      const token = this.getToken();
+      console.log('token', token);
+      if (!token) {
+        return false;
+      }
+      const decodeToken = jwtDecode<JwtPayload>(token);
+      if (decodeToken && decodeToken?.exp) {
+        const tokenDate = new Date(0);
+        tokenDate.setUTCSeconds(decodeToken.exp);
+        return tokenDate > new Date();
+      }
+      return false;
+    } catch {
+      console.warn('[TokenService] Token decodification failed — treating as invalid');
+      return false;
     }
-    const decodeToken = jwtDecode<JwtPayload>(token);
-    if (decodeToken && decodeToken?.exp) {
-      const tokenDate = new Date(decodeToken.exp);
-      const currentDate = new Date();
-      tokenDate.setUTCSeconds(decodeToken.exp)
-      return tokenDate > currentDate;
-    }
-    return false
   }
 
-  isValidRefreshToken() {
-    const token = this.getToken();
-    if (!token) {
-      return false
+  isValidRefreshToken(): boolean {
+    try {
+      const token = this.getRefreshToken();
+      if (!token) {
+        return false;
+      }
+      const decodeToken = jwtDecode<JwtPayload>(token);
+      if (decodeToken && decodeToken?.exp) {
+        const tokenDate = new Date(0);
+        tokenDate.setUTCSeconds(decodeToken.exp);
+        return tokenDate > new Date();
+      }
+      return false;
+    } catch {
+      console.warn('[TokenService] Refresh token decodification failed — treating as invalid');
+      return false;
     }
-    const decodeToken = jwtDecode<JwtPayload>(token);
-    if (decodeToken && decodeToken?.exp) {
-      const tokenDate = new Date(decodeToken.exp);
-      const currentDate = new Date();
-      tokenDate.setUTCSeconds(decodeToken.exp)
-      return tokenDate > currentDate;
-    }
-    return false
   }
 }

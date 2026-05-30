@@ -9,6 +9,7 @@ import { TokenService } from './token.service';
 import { MeService } from './me.service';
 import { ResponseLogin } from '@shared/models/auth.model';
 import { checkToken } from '@interceptors/token.interceptor';
+import { AuthStore } from '../stores/auth.store';
 
 
 @Injectable({
@@ -20,6 +21,7 @@ export class XauthService {
   private tokenService = inject(TokenService);
   private apollo = inject(Apollo);
   private meService = inject(MeService);
+  private authStore = inject(AuthStore);
 
   registerAndLogin(name: string, email: string, password: string) {
     return this.register( name, email, password )
@@ -53,6 +55,7 @@ export class XauthService {
       tap((response) => {
         if (response.data?.revalidate) {
           this.tokenService.saveToken(response.data.revalidate.accessToken);
+          this.authStore.setUser(response.data.revalidate.user);
         }
       }),
       map(({ data }) => data?.revalidate),
@@ -87,9 +90,10 @@ export class XauthService {
         if (!response.data || !response.data.login) {
           throw new Error('Error al registrar usuario');
         }
-        this.meService.getProfile();
+        this.meService.getProfile().subscribe();
         this.tokenService.saveToken(response.data.login.accessToken);
         this.tokenService.saveRefreshToken(response.data.login.refreshToken);
+        this.authStore.setUser(response.data.login.user);
       })
     );
   }
@@ -124,9 +128,10 @@ export class XauthService {
         if (!response.data || !response.data.signup) {
           throw new Error('Error al registrar usuario');
         }
-        this.meService.getProfile();
+        this.meService.getProfile().subscribe();
         this.tokenService.saveToken(response.data.signup.accessToken);
         this.tokenService.saveRefreshToken(response.data.signup.refreshToken);
+        this.authStore.setUser(response.data.signup.user);
       })
     );
   }
@@ -147,6 +152,7 @@ export class XauthService {
 
   logout() {
     this.tokenService.removeToken();
+    this.authStore.clearUser();
   }
 
 }
