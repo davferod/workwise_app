@@ -1,13 +1,14 @@
 import { Injectable, inject } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 
-import { switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 import { environment } from '@environments/environment';
 import { TokenService } from './token.service';
 import { MeService } from './me.service';
 import { ResponseLogin } from '@shared/models/auth.model';
-import { map } from 'rxjs';
+import { checkToken } from '@interceptors/token.interceptor';
 
 
 @Injectable({
@@ -27,8 +28,39 @@ export class XauthService {
     );
   }
 
+  revalidateToken() {
+    return this.apollo.query<{ revalidate: ResponseLogin }>(
+      {
+        query: gql`
+          query Revalidate {
+            revalidate {
+              accessToken
+              refreshToken
+              user {
+                _id
+                username
+                email
+                role
+                isActive
+              }
+            }
+          }
+        `,
+        fetchPolicy: 'no-cache',
+        context: checkToken(),
+      }
+    ).pipe(
+      tap((response) => {
+        if (response.data?.revalidate) {
+          this.tokenService.saveToken(response.data.revalidate.accessToken);
+        }
+      }),
+      map(({ data }) => data?.revalidate),
+      catchError(() => of(null))
+    );
+  }
+
   login(email: string, password: string) {
-    //console.log('servicio: ', email, password);
     return this.apollo.mutate<{ login: ResponseLogin }>({
       mutation: gql`
       mutation Login($loginInput: LoginInput!) {
@@ -37,6 +69,10 @@ export class XauthService {
           refreshToken
           user {
             _id
+            username
+            email
+            role
+            isActive
           }
         }
       }
@@ -68,10 +104,13 @@ export class XauthService {
             refreshToken
             user {
               _id
+              username
+              email
+              role
+              isActive
             }
           }
         }
-      }
       `,
       variables: {
         loginUserInput: { username, email, password },
