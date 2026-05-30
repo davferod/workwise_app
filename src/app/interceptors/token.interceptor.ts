@@ -2,7 +2,8 @@ import { HttpHandlerFn, HttpInterceptorFn, HttpRequest, HttpContextToken, HttpCo
 import { TokenService } from '@app/domains/shared/services/token.service';
 import { XauthService } from '@shared/services/xauth.service';
 import { inject } from '@angular/core';
-import { Observable, switchMap } from 'rxjs';
+import { Observable, switchMap, catchError } from 'rxjs';
+import { Router } from '@angular/router';
 
 const CHECK_TOKEN = new HttpContextToken<boolean>(() => false);
 let setContext = false;
@@ -34,14 +35,26 @@ export const tokenInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, n
 function updateAccessTokenAndRefreshToken(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
   const authService = inject(XauthService);
   const tokenService = inject(TokenService);
-  const refreshToken = tokenService.getRefreshToken();
-  const isValidRefreshToken = tokenService.isValidRefreshToken();
-  if (isValidRefreshToken && refreshToken) {
-    // return authService.refreshToken(refreshToken)
-    // .pipe(
-    //   switchMap(() => addToken(req, next))
-    // )
+  const router = inject(Router);
+  const isValidToken = tokenService.isValidToken();
+
+  if (isValidToken) {
+    return authService.revalidateToken().pipe(
+      switchMap((response) => {
+        if (response) {
+          return addToken(req, next);
+        } else {
+          router.navigate(['/login']);
+          return next(req);
+        }
+      }),
+      catchError(() => {
+        router.navigate(['/login']);
+        return next(req);
+      })
+    );
   }
+  router.navigate(['/login']);
   return next(req);
 }
 
