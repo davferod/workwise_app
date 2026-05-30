@@ -33,7 +33,7 @@ export class ForgotPasswordFormComponent {
     if (this.form.valid) {
       this.status = 'loading';
       const { email } = this.form.getRawValue();
-      
+
       // Simulated email sending (no actual backend call)
       setTimeout(() => {
         this.emailSent = true;
