@@ -3,13 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Apollo } from 'apollo-angular';
 import { catchError, take, tap } from 'rxjs/operators';
 
-import { BoardStore } from '@shared/stores/board.store';
+import { CardStore } from '../stores/card.store';
 import { ListStore } from '@shared/stores/list.store';
-import { MUTATION_CREATE_BOARD } from '@shared/operations/board.mutation';
+import { MUTATION_CREATE_CARD, MUTATION_UPDATE_CARD_POSITION } from '@shared/operations/card.mutation';
 import { of } from 'rxjs';
 
 import { User } from '@shared/models/users.model';
-import { Card, UpdateCardDto, CreateCardDto } from '@shared/models/card.model';
+import { Card, UpdateCardDto, CreateCardDto, CardResponse, UpdateCardPositionDto } from '@shared/models/card.model';
 
 import { Board } from '@shared/models/board.model';
 import { TokenService } from './token.service';
@@ -18,7 +18,7 @@ import { environment } from '@environments/environment';
 import { Colors } from '../models/colors.model';
 import { List, ListResponse } from '../models/list.model';
 import { BehaviorSubject } from 'rxjs';
-import { QUERY_BOARD_BY_ID, QUERY_GET_BOARDS } from '../operations/board.query';
+
 
 @Injectable({
   providedIn: 'root'
@@ -29,38 +29,63 @@ export class CardsService {
   private http = inject(HttpClient);
   private tokenService = inject(TokenService);
   private apollo = inject(Apollo);
-  private boardStore = inject(BoardStore);
+  private cardStore = inject(CardStore);
   private listStore = inject(ListStore);
 
-
-  updateCard(id: Card['id'], changes:UpdateCardDto) {
-    return this.http.put<User>(`${this.apiUrl}/api/v1/cards/${id}`, changes, {
-      context: checkToken(),
-    });
-  }
-
-  createCard(createCardInput: Board) {
-    return this.apollo.mutate<{ board: Board }>({
-      mutation: MUTATION_CREATE_BOARD,
+  updateCardPosition(updateCardPosition: UpdateCardPositionDto) {
+    console.log('updateCardPosition: ', updateCardPosition);
+    return this.apollo.mutate<{ cardResponse: CardResponse }>({
+      mutation: MUTATION_UPDATE_CARD_POSITION,
       variables: {
-        createBoardInput: {...createCardInput}
+        CardPositionInput: {...updateCardPosition}
       },
       context: checkToken(),
     }).pipe(
       take(1),
       catchError(error => {
-        console.error('Error creating board:', error);
-        return of(null); // Puedes devolver un valor predeterminado o manejar el error de alguna manera
+        console.error('Error creating card:', error);
+        return of(null); // se puede devolver un valor predeterminado o manejar el error de alguna manera
       }),
       tap(res => {
         if (res && res.data) {
-          this.boardStore.setBoard(res.data.board);
-          console.log('Board updated:', res);
+          //this.cardStore.setCards(res.data.createCard);
+          //actualizar la lista
+          const listId = updateCardPosition.listId;
+          //const list = this.listStore.updateList(res.data.cardResponse, listId);
+          console.log('card updated:', res);
         } else {
-          console.error('Error creating board. Response:', res);
+          console.error('Error creating card. Response:', res);
         }
     })
     ).subscribe();
   }
 
+  createCard(createCardInput: CreateCardDto) {
+    console.log('createCardInput: ', createCardInput);
+    return this.apollo.mutate<{ createCard: CardResponse }>({
+      mutation: MUTATION_CREATE_CARD,
+      variables: {
+        createCardInput: {...createCardInput}
+      },
+      context: checkToken(),
+    }).pipe(
+      take(1),
+      catchError(error => {
+        console.error('Error creating card:', error);
+        return of(null); // se puede devolver un valor predeterminado o manejar el error de alguna manera
+      }),
+      tap(res => {
+        if (res && res.data) {
+          //this.cardStore.setCards(res.data.createCard);
+          //actualizar la lista
+          const listId = createCardInput.listId;
+          const list = this.listStore.updateList(res.data.createCard, listId);
+          console.log('card updated:', res);
+          console.log('list updated:', list);
+        } else {
+          console.error('Error creating card. Response:', res);
+        }
+    })
+    ).subscribe();
+  }
 }

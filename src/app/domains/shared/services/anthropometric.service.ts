@@ -27,7 +27,7 @@ export class AnthropometricService {
       take(1),
       tap(({ data }) => {
         if (data) {
-          this.anthropometricStore.setAnthropometric(data.anthropometricMeasurements);
+          this.anthropometricStore.setAnthropometric(data.anthropometricMeasurements as Anthropometric[]);
         }
       }),
       catchError(error => {

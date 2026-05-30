@@ -1,8 +1,10 @@
+import { signal } from "@angular/core"
+
 export type Colors = 'success' | 'primary' | 'danger' | 'light' | 'sky' | 'blue' | 'green' | 'red' | 'yellow' | 'indigo' | 'violet' | 'pink' | 'gray' | 'sky'
 
 export type ObjColors = Record<Colors, Record<string, boolean>>
 
-export const COLORS = {
+export const COLORS = signal<ObjColors>({
   blue: {
     'bg-blue-500': true,
     'hover:bg-blue-700': true,
@@ -81,7 +83,7 @@ export const COLORS = {
     'focus:bg-danger-300': true,
     'text-white': true,
   },
-}
+})
 
 export const BACKGROUNDS: ObjColors = {
   blue: {

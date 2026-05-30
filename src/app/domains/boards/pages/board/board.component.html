@@ -50,6 +50,7 @@
               }
               @if (list.showCardForm) {
                 <div class="w-full">
+                  <div>list: {{list._id}}</div>
                   <textarea [formControl]="inputCard" class="w-full"></textarea>
                   <div class="flex space-x-2 justify-between ">
                     <app-button color="primary" (click)="createCard(list)">Create</app-button>

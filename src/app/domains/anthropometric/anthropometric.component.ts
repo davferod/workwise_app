@@ -15,7 +15,7 @@ import { Dialog } from '@angular/cdk/dialog';
 @Component({
   selector: 'app-anthropometric',
   standalone: true,
-  imports: [CommonModule, SidebarComponent, TableComponent, ButtonComponent, AnthropometricFormComponent],
+  imports: [CommonModule, SidebarComponent, TableComponent, ButtonComponent],
   templateUrl: './anthropometric.component.html'
 })
 export class AnthropometricComponent implements OnInit{

@@ -10,7 +10,7 @@ import { ProfileStore } from '@shared/stores/profile.store';
 @Component({
   selector: 'profile-form',
   standalone: true,
-  imports: [CommonModule, CdkTableModule, ReactiveFormsModule, DatePipe],
+  imports: [CommonModule, CdkTableModule, ReactiveFormsModule],
   templateUrl: './profile-form.component.html'
 })
 export class ProfileFormComponent implements OnInit{
@@ -62,6 +62,7 @@ export class ProfileFormComponent implements OnInit{
     };
     // Obtiene el ID del perfil
     const idProfile = this.profile()._id;
+    console.log('ID del perfil:', idProfile);
     if (!idProfile) {
       console.error('No se ha podido obtener el ID del perfil');
       return;
@@ -77,6 +78,7 @@ export class ProfileFormComponent implements OnInit{
     // Obtiene los valores del formulario
     const profileFormData = this.profileForm.value;
     // Formatea la fecha de nacimiento utilizando DatePipe
+    console.log('Fecha de nacimiento:', profileFormData.date_of_birth);
     const transformedDate = this.datepipe.transform(profileFormData.date_of_birth, 'yyyy-MM-dd');
     if (transformedDate !== null) {
       this.formattedDateOfBirth = transformedDate;

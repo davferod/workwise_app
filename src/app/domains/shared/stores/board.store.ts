@@ -8,15 +8,13 @@ export class BoardStore {
 
   #board = signal<Board>({} as Board);
   boardData = computed(this.#board);
-  boards = signal<Board[]>([{} as Board]);
-  boardsData = computed(this.boards);
-  originalData = signal<Board[]>([]);
+  #boards = signal<Board[]>([{} as Board]);
+  boardsData = computed(this.#boards);
 
   constructor() { }
 
   setBoards(boards: Board[]): void {
-    this.boards.set(boards);
-    //this.originalData.set(boards);
+    this.#boards.set(boards);
   }
 
   setBoard(board: Board): void {
@@ -34,13 +32,13 @@ export class BoardStore {
 
   findBoard(boardId: string) {
     //filtrar por id borad para retornar el color
-    const board = this.boards().find((board) => board._id === boardId);
+    const board = this.#boards().find((board) => board._id === boardId);
     return board?.backgroundColor || 'sky';
   }
 
   findBoardId(boardId: string) {
     //filtrar por id borad para retornar el color
-    const board = this.boards().find((board) => board._id === boardId) || null;
+    const board = this.#boards().find((board) => board._id === boardId) || null;
     return board;
   }
 

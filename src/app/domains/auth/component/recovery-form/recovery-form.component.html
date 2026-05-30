@@ -12,26 +12,19 @@
         type="button"
         class="p-2 absolute right-2"
         (click)="showPassword = !showPassword"
+        title="Show password"
       >
         <fa-icon [icon]="showPassword ? faEye : faEyeSlash"></fa-icon>
       </button>
     </div>
-    <div
-      *ngIf="form.controls.newPassword.touched && form.controls.newPassword.invalid"
-    >
-      <p
-        *ngIf="form.controls.newPassword.hasError('required')"
-        class="font-medium text-red-500 text-xs mt-1 ml-1"
-      >
-        This field is mandatory
-      </p>
-      <p
-        *ngIf="form.controls.newPassword.hasError('minlength')"
-        class="font-medium text-red-500 text-xs mt-1 ml-1"
-      >
-        This field should be greater than 6 characters
-      </p>
-    </div>
+    @if (form.controls.newPassword.touched && form.controls.newPassword.invalid) {
+      @if (form.controls.newPassword.hasError('required')) {
+        <p class="font-medium text-red-500 text-xs mt-1 ml-1">This field is mandatory</p>
+      }
+      @if (form.controls.newPassword.hasError('minlength')) {
+        <p class="font-medium text-red-500 text-xs mt-1 ml-1">This field should be greater than 6 characters</p>
+      }
+    }
   </div>
   <div>
     <div class="relative">
@@ -42,34 +35,20 @@
         class="w-full rounded bg-gray-100 border-gray-300 border-2"
       />
     </div>
-    <div
-      *ngIf="
-        form.controls.confirmPassword.touched &&
-        form.controls.confirmPassword.invalid
-      "
-    >
-      <p
-        *ngIf="form.controls.confirmPassword.hasError('required')"
-        class="font-medium text-red-500 text-xs mt-1 ml-1"
-      >
-        This field is mandatory
-      </p>
-      <p
-        *ngIf="form.controls.confirmPassword.hasError('minlength')"
-        class="font-medium text-red-500 text-xs mt-1 ml-1"
-      >
-        This field should be greater than 6 characters
-      </p>
-    </div>
+    @if (form.controls.confirmPassword.touched && form.controls.confirmPassword.invalid) {
+      @if (form.controls.confirmPassword.hasError('required')) {
+        <p class="font-medium text-red-500 text-xs mt-1 ml-1">This field is mandatory</p>
+      }
+      @if (form.controls.confirmPassword.hasError('minlength')) {
+        <p class="font-medium text-red-500 text-xs mt-1 ml-1">This field should be greater than 6 characters</p>
+      }
+    }
   </div>
-  <div *ngIf="form.controls.confirmPassword.touched">
-    <p
-      *ngIf="form.hasError('mismatch')"
-      class="font-medium text-red-500 text-xs mt-1 ml-1"
-    >
-      The password are not the same
-    </p>
-  </div>
+  @if (form.controls.confirmPassword.touched) {
+    @if (form.hasError('mismatch')) {
+      <p class="font-medium text-red-500 text-xs mt-1 ml-1">The password are not the same</p>
+    }
+  }
   <div>
     <app-button
       typeBtn="submit"

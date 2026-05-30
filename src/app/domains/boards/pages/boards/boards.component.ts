@@ -16,7 +16,7 @@ import { BoardsService } from '@shared/services/boards.service';
 @Component({
   selector: 'app-boards',
   standalone: true,
-  imports: [CommonModule, FontAwesomeModule, CardColorComponent, CdkAccordionModule, RouterLinkWithHref, RouterLinkActive, NavbarComponent, SidebarComponent],
+  imports: [CommonModule, FontAwesomeModule, CardColorComponent, CdkAccordionModule, RouterLinkWithHref, SidebarComponent],
   templateUrl: './boards.component.html'
 })
 export class BoardsComponent implements OnInit {
@@ -32,7 +32,7 @@ export class BoardsComponent implements OnInit {
   faAngleUp = faAngleUp;
   faAngleDown = faAngleDown;
   //variables
-  boards: Board[] = [];
+  boards: Board[] = [{} as Board];
   //menu
   workspaceMenu = [
     {
@@ -71,7 +71,7 @@ export class BoardsComponent implements OnInit {
   private profileStore = inject(ProfileStore);
   profile = this.profileStore.profileData();
   private boardStore = inject(BoardStore);
-  boardsData = this.boardStore.boards;
+  boardsData = this.boardStore.boardsData;
 
   ngOnInit(): void {
     this.getAllBoards();
@@ -80,10 +80,10 @@ export class BoardsComponent implements OnInit {
   getAllBoards() {
     /* conectar al servicio de boards y obtener todas las boards */
     this.boardService.getAllBoards()
-    console.log('getAllBoards', this.boardsData());
-/* conectar al servicio de boards y obtener todas las boards del usuario */
-/*     this.meService.getMeBoads().subscribe((boards) => {
-      this.boards = boards;
+  /* conectar al servicio de boards y obtener todas las boards del usuario */
+  /* this.meService.getMeBoads().subscribe((boards) => {
+     this.boards = boards;
     } ); */
   }
+
 }

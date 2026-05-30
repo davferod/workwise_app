@@ -21,7 +21,6 @@ query FindOneByBoard($boardId: ID!) {
     cards {
       _id
       title
-      createdAt
       description
       position
       routines {
@@ -44,7 +43,6 @@ query FindOneByBoard($boardId: ID!) {
         status
         createdAt
       }
-      userid
     }
   }
 }

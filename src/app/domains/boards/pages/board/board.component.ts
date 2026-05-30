@@ -23,11 +23,12 @@ import { List } from '@app/domains/shared/models/list.model';
 import { BACKGROUNDS } from '@shared/models/colors.model';
 import { ListStore } from '@app/domains/shared/stores/list.store';
 import { BoardStore } from '@app/domains/shared/stores/board.store';
+import { CardStore } from '@app/domains/shared/stores/card.store';
 
 @Component({
   selector: 'app-board',
   standalone: true,
-  imports: [CommonModule, CdkDropListGroup, CdkDropList, CdkDrag, ReactiveFormsModule, NavbarComponent, ButtonComponent, TodoDialogComponent, DialogModule],
+  imports: [CommonModule, CdkDropListGroup, CdkDropList, CdkDrag, ReactiveFormsModule, ButtonComponent, DialogModule],
   templateUrl: './board.component.html',
   styles: [
     `
@@ -61,7 +62,9 @@ export class BoardComponent implements OnInit, OnDestroy {
   listsData = this.listStore.listsData;
   private boardStore = inject(BoardStore);
   boardData = this.boardStore.findBoardId;
-
+  private cardStore = inject(CardStore);
+  cardData = this.cardStore.CardsData;
+  cardsData = this.cardStore.CardsData;
   constructor(
     private dialog: Dialog,
     private route: ActivatedRoute,
@@ -84,22 +87,41 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   drop(event: CdkDragDrop<Card[]>) {
+    const currentListId = event.container.id;
+    const previousListId = event.previousContainer.id;
+    let card = event.previousContainer.data[event.previousIndex];
+    // Obtener nueva posición basada en la lógica de boardsService
+    const updatedArray = [...event.container.data];
+    const previousArray = [...event.previousContainer.data];
+    const newPosition = this.boardsService.getPosition(event.container.data, event.currentIndex);
     if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
+      // Si la tarjeta se mueve dentro de la misma lista
+      const updatedArray = [...event.container.data];
+      moveItemInArray(
+        updatedArray,
         event.previousIndex,
         event.currentIndex,
       );
+      event.container.data = updatedArray;
+      this.listStore.updateListCards(currentListId, updatedArray);
+    } else {
+      transferArrayItem(
+        previousArray,
+        updatedArray,
+        event.previousIndex,
+        event.currentIndex,
+      );
+      console.log('updatedArray: ', updatedArray);
+      console.log('previousArray: ', previousArray);
+      event.container.data = updatedArray;
+      event.previousContainer.data = previousArray;
+      this.listStore.moveCardToAnotherList(previousListId, currentListId, updatedArray, previousArray);
     }
-    const position = this.boardsService.getPosition(event.container.data, event.currentIndex);
-    const card = event.container.data[event.currentIndex];
-    const listId = event.container.id;
-    this.updateCard(card, position, listId);
-
+    card = { ...card, position: newPosition, listId: currentListId };
+    this.listStore.updateCardPosition(currentListId, card);
+    this.cardsService.updateCardPosition(card);
   }
+
 
   dropHorizontal(event: CdkDragDrop<List[]>) {
     if (event.previousContainer === event.container) {
@@ -113,7 +135,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       );
     }
     const destinationList = event.container;
-    console.log('destinationList: ', destinationList);
+    console.log('previous: ', event.previousIndex ,'current: ', event.currentIndex);
   }
 
   addList() {
@@ -159,9 +181,8 @@ export class BoardComponent implements OnInit, OnDestroy {
     }
   }
 
-  private updateCard(card: Card, position: number, listId: string | number) {
-    this.cardsService.updateCard(card.id, { position, listId })
-    .subscribe();
+  private updateCardPosition(_id: string, position: number, listId: string) {
+    this.cardsService.updateCardPosition({_id, position, listId })
   }
 
   openFormCard(list: List) {
@@ -173,16 +194,16 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   createCard(list: List) {
     const title = this.inputCard.value;
+    console.log(this.board, title)
     if (this.board && title) {
       const listId = list._id;
-      const boardId = this.board._id;
+      //const position = 1
       const position = this.boardsService.getPositionNewItem(list.cards);
-      const card = { title, listId, boardId, position };
-      // this.cardsService.createCard(card).subscribe((card) => {
-      //   list.cards.push(card);
-      //   this.inputCard.setValue('')
-      //   list.showCardForm = false
-      // });
+      const card = { title, listId, position };
+      console.log('card-value: ', card);
+      this.cardsService.createCard(card);
+      //this.getBoard(this.board._id);
+      list.showCardForm = false
     }
   }
 

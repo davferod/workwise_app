@@ -5,7 +5,7 @@ import { ApolloClientOptions, InMemoryCache } from '@apollo/client/core';
 import { environment } from '@environments/environment';
 
 const uri = environment.API_URL_GRAPHQL; // <-- add the URL of the GraphQL server here
-export function apolloOptionsFactory(): ApolloClientOptions<any> {
+export function apolloOptionsFactory(): ApolloClientOptions {
   const httpLink = inject(HttpLink);
   return {
     link: httpLink.create({ uri }),

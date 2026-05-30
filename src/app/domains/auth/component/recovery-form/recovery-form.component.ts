@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -8,7 +8,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { CustomValidators } from '@shared/utils/validators';
-import { AuthService } from '@shared/services/auth.service';
+import { XauthService } from '@shared/services/xauth.service';
 import { RequestStatus } from '@shared/models/request-status.model';
 
 @Component({
@@ -18,6 +18,10 @@ import { RequestStatus } from '@shared/models/request-status.model';
   templateUrl: './recovery-form.component.html'
 })
 export class RecoveryFormComponent {
+  private formBuilder = inject(FormBuilder);
+  private authService = inject(XauthService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
   form = this.formBuilder.nonNullable.group(
     {
       newPassword: ['', [Validators.minLength(6), Validators.required]],
@@ -37,10 +41,6 @@ export class RecoveryFormComponent {
   token!: '';
 
   constructor(
-    private formBuilder: FormBuilder,
-    private authService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute
     ) {
       this.route.queryParams.subscribe(params => {
         const token = params['token'];
@@ -55,27 +55,27 @@ export class RecoveryFormComponent {
     }
 
   recovery() {
-    if (this.form.valid) {
-      const { newPassword } = this.form.getRawValue();
-      this.status = 'loading';
-      this.authService.changePassword(this.token, newPassword)
-        .subscribe({
-          next: () => {
-            this.status = 'success';
-            this.router.navigate(['/login']);
-          },
-          error: (err) => {
-            this.status = 'failed';
-            this.form.setErrors({ invalid: true });
-            this.errorMessage = err.message;
-          },
-        });
-      this.status = 'loading';
-      setTimeout(() => {
-        this.status = 'success';
-      }, 2000);
-    } else {
-      this.form.markAllAsTouched();
-    }
+    // if (this.form.valid) {
+    //   const { newPassword } = this.form.getRawValue();
+    //   this.status = 'loading';
+    //   this.authService.changePassword(this.token, newPassword)
+    //     .subscribe({
+    //       next: () => {
+    //         this.status = 'success';
+    //         this.router.navigate(['/login']);
+    //       },
+    //       error: (err) => {
+    //         this.status = 'failed';
+    //         this.form.setErrors({ invalid: true });
+    //         this.errorMessage = err.message;
+    //       },
+    //     });
+    //   this.status = 'loading';
+    //   setTimeout(() => {
+    //     this.status = 'success';
+    //   }, 2000);
+    // } else {
+    //   this.form.markAllAsTouched();
+    // }
   }
 }

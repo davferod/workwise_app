@@ -44,7 +44,7 @@ export class MeService {
       }),
       tap(res => {
         if (res && res.data) {
-          this.profileStore.setProfile(res.data.profile);
+          this.profileStore.setProfile(res.data.profile as Profile);
           console.log('Profile updated:', res);
         } else {
           console.error('Error updating profile. Response:', res);
@@ -65,7 +65,7 @@ export class MeService {
       }),
       tap(res => {
         if (res && res.data && res.data.profile) {
-          this.profileStore.setProfile(res.data.profile);
+          this.profileStore.setProfile(res.data.profile as Profile);
         } else {
           console.error('Error fetching profile. Response:', res);
         }
@@ -85,7 +85,7 @@ export class MeService {
       }),
       tap(res => {
         if (res && res.data && res.data.profiles) {
-          this.profileStore.setUsers(res.data.profiles);
+          this.profileStore.setUsers(res.data.profiles as Profile[]);
         } else {
           console.error('Error fetching profile. Response:', res);
         }

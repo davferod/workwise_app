@@ -1,4 +1,4 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig,  provideZonelessChangeDetection} from '@angular/core';
 import { PreloadAllModules, provideRouter, withComponentInputBinding, withPreloading, withViewTransitions } from '@angular/router';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 
@@ -15,6 +15,7 @@ export const appConfig: ApplicationConfig = {
       withFetch(),
       withInterceptors([tokenInterceptor, errorResponseInterceptor])
     ),
+    provideZonelessChangeDetection(),
     graphqlProvider,
     DatePipe
   ]

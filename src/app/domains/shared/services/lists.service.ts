@@ -45,7 +45,7 @@ getBoard(id: Board['_id']) {
     }),
     tap(res => {
       if (res && res.data && res.data.boards) {
-        this.boardStore.setBoards(res.data.boards);
+        this.boardStore.setBoards(res.data.boards as Board[]);
       } else {
         console.error('Error fetching boards. Response:', res);
       }

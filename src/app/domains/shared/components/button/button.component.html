@@ -1,15 +1,11 @@
 <button
-  [type]="'submit'"
-  [disabled]="disabled || loading"
-  [ngClass]="colors"
-  class="w-full px-5 py-2 rounded font-medium text-sm focus:ring-2"
+  [type]="typeBtn()"
+  [disabled]="disabled() || loading()"
+  [ngClass]="colorClasses()"
+  class="w-full px-5 py-2 rounded font-medium text-sm focus:ring-2 transition-all"
 >
-  @if (loading) {
-  <fa-icon
-    class="mr-2"
-    [icon]="faSpinner"
-    [pulse]="true"
-  ></fa-icon>
+  @if (loading()) {
+    <fa-icon class="mr-2" [icon]="faSpinner" fa-spin-pulse></fa-icon>
   }
   <ng-content></ng-content>
 </button>

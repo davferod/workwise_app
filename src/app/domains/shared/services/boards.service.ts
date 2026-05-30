@@ -57,7 +57,7 @@ export class BoardsService {
       tap(res => {
         if (res && res.data && res.data.findOneByBoard) {
           console.log('Lists:', res.data.findOneByBoard);
-          this.listStore.setLists(res.data.findOneByBoard);
+          this.listStore.setLists(res.data.findOneByBoard as ListResponse[]);
         } else {
           console.log('Lists:', res?.data);
           console.error('Error fetching lists. Response:', res);
@@ -65,15 +65,6 @@ export class BoardsService {
       })
     ).subscribe()
   };
-
-  // getBoardx(id: Board['id']) {
-  //   return this.http.get<Board>(`${this.apiUrl}/api/v1/boards/${id}`, {
-  //     context: checkToken()
-  //   })
-  //   .pipe(
-  //     tap(board => this.setBackgroundColor(board.backgroundColor))
-  //   );
-  // }
 
   createBoard(createBoardInput: Board) {
     return this.apollo.mutate<{ board: Board }>({
@@ -90,7 +81,7 @@ export class BoardsService {
       }),
       tap(res => {
         if (res && res.data) {
-          this.boardStore.setBoard(res.data.board);
+          this.boardStore.setBoard(res.data.board as Board);
           console.log('Board updated:', res);
         } else {
           console.error('Error creating board. Response:', res);
@@ -111,7 +102,7 @@ export class BoardsService {
       }),
       tap(res => {
         if (res && res.data && res.data.boards) {
-          this.boardStore.setBoards(res.data.boards);
+          this.boardStore.setBoards(res.data.boards as Board[]);
         } else {
           console.error('Error fetching boards. Response:', res);
         }
@@ -125,17 +116,26 @@ export class BoardsService {
     }
     if (cards.length > 1 && currentIndex === 0) {
       const onTopPosition = cards[currentIndex + 1].position;
-      return onTopPosition / 2;
+      if (onTopPosition) {
+        return onTopPosition / 2;
+      }
+      return 2 / 2;
     }
     const lastIndex = cards.length - 1;
     if (cards.length > 2 && currentIndex > 0 && currentIndex < lastIndex) {
       const previousCardPosition = cards[currentIndex - 1].position;
       const nextCardPosition = cards[currentIndex + 1].position;
-      return (previousCardPosition + nextCardPosition) / 2;
+      if (previousCardPosition && nextCardPosition) {
+        return (previousCardPosition + nextCardPosition) / 2;
+      }
+      return 2 / 2;
     }
     if (cards.length > 1 && currentIndex === lastIndex) {
       const onBottomPosition = cards[lastIndex - 1].position;
-      return onBottomPosition + this.bufferSpace;
+      if (onBottomPosition) {
+        return onBottomPosition + this.bufferSpace;
+      }
+      return this.bufferSpace;
     }
     return 0;
   }
@@ -146,7 +146,10 @@ export class BoardsService {
     }
     const lastIndex = elements.length - 1
     const onBottomPosition = elements[lastIndex].position;
-    return onBottomPosition + this.bufferSpace;
+    if (onBottomPosition) {
+      return onBottomPosition + this.bufferSpace;
+    }
+    return this.bufferSpace;
   }
 
   setBackgroundColor(color: Colors) {

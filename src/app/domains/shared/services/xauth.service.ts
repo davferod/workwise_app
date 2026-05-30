@@ -1,20 +1,13 @@
-import { Injectable, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 
-import { catchError, switchMap, take, tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
-import { UsersStore } from '@app/domains/shared/stores/users-store';
-import { ProfileStore } from '@app/domains/shared/stores/profile.store';
-import { Profile } from '../models/profile.model';
 import { TokenService } from './token.service';
 import { MeService } from './me.service';
 import { ResponseLogin } from '@shared/models/auth.model';
-import { of } from 'rxjs';
-
-import { checkToken } from '@interceptors/token.interceptor';
-import { QUERY_PROFILE } from '@shared/operations/query';
+import { map } from 'rxjs';
 
 
 @Injectable({
@@ -23,9 +16,6 @@ import { QUERY_PROFILE } from '@shared/operations/query';
 export class XauthService {
 
   apiUrl = environment.API_URL;
-  private usersStore = inject(UsersStore);
-  private profileStore = inject(ProfileStore);
-  private http = inject(HttpClient);
   private tokenService = inject(TokenService);
   private apollo = inject(Apollo);
   private meService = inject(MeService);
@@ -54,8 +44,8 @@ export class XauthService {
       variables: {loginInput: { email, password}},
     }).pipe(
       tap(response => {
-        if (response.errors) {
-          console.error('GraphQL Errors: ', response.errors);
+        if (response.error) {
+          console.error('GraphQL Errors: ', response.error);
           throw new Error('Error al registrar usuario');
         }
         if (!response.data || !response.data.login) {
@@ -73,20 +63,26 @@ export class XauthService {
     return this.apollo.mutate<{ signup: ResponseLogin }>({
       mutation: gql`
         mutation Signup($loginUserInput: LoginUserInput!) {
-          signup(loginInput: $loginInput) {
-          accessToken
-          refreshToken
-          user {
-            _id
+          signup(loginUserInput: $loginUserInput) {
+            accessToken
+            refreshToken
+            user {
+              _id
+            }
           }
         }
       }
       `,
-      variables: {loginInput: {username, email, password},
+      variables: {
+        loginUserInput: { username, email, password },
       },
     }).pipe(
       tap(response => {
-        if (!response.data) {
+        if (response.error) {
+          console.error('GraphQL Errors: ', response.error);
+          throw new Error('Error al registrar usuario');
+        }
+        if (!response.data || !response.data.signup) {
           throw new Error('Error al registrar usuario');
         }
         this.meService.getProfile();
@@ -96,18 +92,18 @@ export class XauthService {
     );
   }
 
-  refreshToken(refreshToken: string) {
-    return this.http.post<ResponseLogin>(`${this.apiUrl}/api/v1/auth/refresh-token`, { refreshToken })
-    .pipe(
-      tap(response => {
-        this.tokenService.saveToken(response.accessToken);
-        this.tokenService.saveRefreshToken(response.refreshToken);
-      })
-    );
-  }
-
   isAvailable(email: string) {
-    return this.http.post<{isAvailable: boolean}>(`${this.apiUrl}/api/v1/auth/is-available`, { email })
+    return this.apollo.query<{ isValidate: boolean }>({
+      query: gql`
+        query IsValidate($email: String!) {
+          isValidate(email: $email)
+        }
+      `,
+      variables: { email },
+      fetchPolicy: 'no-cache',
+    }).pipe(
+      map(({ data }) => ({ isAvailable: data?.isValidate }))
+    );
   }
 
   logout() {

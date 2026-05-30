@@ -15,16 +15,16 @@ import { faTrello, } from '@fortawesome/free-brands-svg-icons';
 })
 export class SidebarComponent {
   //iconos
-  faTrello = faTrello;
-  faBox = faBox;
-  faWaveSquare = faWaveSquare;
-  faClock = faClock;
-  faHeart = faHeart;
-  faBorderAll = faBorderAll;
-  faUsers = faUsers;
-  faGear = faGear;
-  faAngleUp = faAngleUp;
-  faAngleDown = faAngleDown;
+  faTrello: any = faTrello;
+  faBox: any = faBox;
+  faWaveSquare: any = faWaveSquare;
+  faClock: any = faClock;
+  faHeart: any = faHeart;
+  faBorderAll: any = faBorderAll;
+  faUsers: any = faUsers;
+  faGear: any = faGear;
+  faAngleUp: any = faAngleUp;
+  faAngleDown: any = faAngleDown;
 
   //menu
   workspaceMenu = [

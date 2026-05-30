@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -10,8 +10,8 @@ import { CustomValidators } from '@shared/utils/validators';
 
 import { ButtonComponent } from '@shared/components/button/button.component';
 import { AlertsComponent } from '@shared/components/alerts/alerts.component';
-import { AuthService } from '@shared/services/auth.service';
 import { RequestStatus } from '@shared/models/request-status.model';
+import { XauthService } from '@shared/services/xauth.service';
 
 @Component({
   selector: 'app-register-form',
@@ -21,6 +21,9 @@ import { RequestStatus } from '@shared/models/request-status.model';
 })
 export class RegisterFormComponent {
 
+  private formBuilder = inject(FormBuilder);
+  private xauthService = inject(XauthService);
+  private router = inject(Router);
   formValidations = this.formBuilder.nonNullable.group({
     email: ['', [Validators.email, Validators.required]],
   });
@@ -45,16 +48,13 @@ export class RegisterFormComponent {
   showRegister = false;
 
   constructor(
-    private formBuilder: FormBuilder,
-    private authService: AuthService,
-    private router: Router
   ) {}
 
   register() {
     if (this.form.valid) {
       this.status = 'loading';
       const { name, email, password } = this.form.getRawValue();
-      this.authService.registerAndLogin(name, email, password).
+      this.xauthService.registerAndLogin(name, email, password).
         subscribe({
           next: () => {
             this.status = 'success';
@@ -82,7 +82,7 @@ export class RegisterFormComponent {
     if (this.formValidations.valid) {
       this.statusUser = 'loading';
       const { email } = this.formValidations.getRawValue();
-      this.authService.isAvailable(email)
+      this.xauthService.isAvailable(email)
       .subscribe({
         next: (rta) => {
           this.statusUser = 'success';

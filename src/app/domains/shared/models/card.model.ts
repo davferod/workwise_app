@@ -1,25 +1,36 @@
-import { List } from './list.model';
 
 export interface Card {
-  id: string;
+  _id: string;
   title: string;
-  description: string;
+  description?: string;
   position: number;
-  list?: List;
+  listId: string;
 }
 
 export interface CreateCardDto {
   title: string;
-  description?: string;
   position: number;
-  listId: string | number;
-  boardId: string;
+  listId: string;
 }
 
 export interface UpdateCardDto {
   title?: string;
   description?: string;
-  position?: number;
-  listId?: string | number;
+  position: number;
+  listId: string;
   boardId?: string;
+}
+
+export interface UpdateCardPositionDto {
+  _id: string;
+  position: number;
+  listId: string;
+}
+
+export interface CardResponse {
+  _id: string;
+  title: string;
+  description?: string;
+  position: number;
+  listId: string;
 }

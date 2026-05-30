@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, computed, input, Input, model } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -11,17 +11,17 @@ import { COLORS, Colors } from '@shared/models/colors.model';
   templateUrl: './button.component.html'
 })
 export class ButtonComponent {
-  @Input() disabled = false;
-  @Input() loading = false;
-  @Input() typeBtn: 'reset' | 'submit' | 'button' = 'button';
-  @Input() color: Colors = 'primary';
+  disabled = input<boolean>(false);
+//  @Input() disabled = false;
+  loading = input<boolean>(false);
+  typeBtn = input<'reset' | 'submit' | 'button'>('button');
+  private mapColors = COLORS();
+  color = model<Colors>('primary');
+// Computamos las clases basándonos en tu modelo COLORS
+  colorClasses = computed(() => {
+    return this.mapColors[this.color()] || this.mapColors['primary'];
+  });
+
   faSpinner = faSpinner;
-
-  mapColors = COLORS;
-
-  get colors() {
-    const colors = this.mapColors[this.color];
-    return colors ? colors : {};
-  }
 
 }

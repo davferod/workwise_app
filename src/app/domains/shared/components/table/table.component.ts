@@ -11,7 +11,7 @@ import { Accion } from '../../models/tabla-columna';
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CdkTableModule, ButtonComponent],
+  imports: [CommonModule, ReactiveFormsModule, CdkTableModule],
   templateUrl: './table.component.html'
 })
 export class TableComponent {

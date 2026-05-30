@@ -11,7 +11,7 @@ import { ProfileStore } from '@shared/stores/profile.store';
 @Component({
   selector: 'profile-form',
   standalone: true,
-  imports: [CommonModule, CdkTableModule, ReactiveFormsModule, DatePipe],
+  imports: [CommonModule, CdkTableModule, ReactiveFormsModule],
   templateUrl: './anthropometric-form.component.html'
 })
 export class AnthropometricFormComponent implements OnInit{

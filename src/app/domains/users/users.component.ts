@@ -6,7 +6,7 @@ import { debounceTime } from 'rxjs';
 
 import { UsersService } from '@shared/services/users.service';
 import { UsersStore } from '@app/domains/shared/stores/users-store';
-import { AuthService } from '@shared/services/auth.service';
+import { XauthService } from '@shared/services/xauth.service';
 import { Users } from '@shared/models/users.model';
 
 @Component({
@@ -18,7 +18,7 @@ import { Users } from '@shared/models/users.model';
 export class UsersComponent {
   private usersService = inject(UsersService);
   private usersStore = inject(UsersStore);
-  private authService = inject(AuthService);
+  private authService = inject(XauthService);
   columns: string[] = ['id', 'avatar', 'name', 'email'];
   input = new FormControl('', { nonNullable: true });
 
@@ -35,10 +35,10 @@ export class UsersComponent {
     .subscribe((value) => {
       this.findProduct(value);
     });
-    this.authService.user$
-    .subscribe((data) => {
-      this.user = data;
-    });
+    // this.authService.user$
+    // .subscribe((data) => {
+    //   this.user = data;
+    // });
   }
 
   getUsers() {
