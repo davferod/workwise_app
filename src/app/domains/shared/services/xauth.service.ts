@@ -1,13 +1,15 @@
 import { Injectable, inject } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 
-import { switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 import { environment } from '@environments/environment';
 import { TokenService } from './token.service';
 import { MeService } from './me.service';
 import { ResponseLogin } from '@shared/models/auth.model';
-import { map } from 'rxjs';
+import { checkToken } from '@interceptors/token.interceptor';
+import { AuthStore } from '../stores/auth.store';
 
 
 @Injectable({
@@ -19,6 +21,7 @@ export class XauthService {
   private tokenService = inject(TokenService);
   private apollo = inject(Apollo);
   private meService = inject(MeService);
+  private authStore = inject(AuthStore);
 
   registerAndLogin(name: string, email: string, password: string) {
     return this.register( name, email, password )
@@ -27,8 +30,40 @@ export class XauthService {
     );
   }
 
+  revalidateToken() {
+    return this.apollo.query<{ revalidate: ResponseLogin }>(
+      {
+        query: gql`
+          query Revalidate {
+            revalidate {
+              accessToken
+              refreshToken
+              user {
+                _id
+                username
+                email
+                role
+                isActive
+              }
+            }
+          }
+        `,
+        fetchPolicy: 'no-cache',
+        context: checkToken(),
+      }
+    ).pipe(
+      tap((response) => {
+        if (response.data?.revalidate) {
+          this.tokenService.saveToken(response.data.revalidate.accessToken);
+          this.authStore.setUser(response.data.revalidate.user);
+        }
+      }),
+      map(({ data }) => data?.revalidate),
+      catchError(() => of(null))
+    );
+  }
+
   login(email: string, password: string) {
-    //console.log('servicio: ', email, password);
     return this.apollo.mutate<{ login: ResponseLogin }>({
       mutation: gql`
       mutation Login($loginInput: LoginInput!) {
@@ -37,6 +72,10 @@ export class XauthService {
           refreshToken
           user {
             _id
+            username
+            email
+            role
+            isActive
           }
         }
       }
@@ -51,9 +90,10 @@ export class XauthService {
         if (!response.data || !response.data.login) {
           throw new Error('Error al registrar usuario');
         }
-        this.meService.getProfile();
+        this.meService.getProfile().subscribe();
         this.tokenService.saveToken(response.data.login.accessToken);
         this.tokenService.saveRefreshToken(response.data.login.refreshToken);
+        this.authStore.setUser(response.data.login.user);
       })
     );
   }
@@ -68,10 +108,13 @@ export class XauthService {
             refreshToken
             user {
               _id
+              username
+              email
+              role
+              isActive
             }
           }
         }
-      }
       `,
       variables: {
         loginUserInput: { username, email, password },
@@ -85,9 +128,10 @@ export class XauthService {
         if (!response.data || !response.data.signup) {
           throw new Error('Error al registrar usuario');
         }
-        this.meService.getProfile();
+        this.meService.getProfile().subscribe();
         this.tokenService.saveToken(response.data.signup.accessToken);
         this.tokenService.saveRefreshToken(response.data.signup.refreshToken);
+        this.authStore.setUser(response.data.signup.user);
       })
     );
   }
@@ -108,6 +152,7 @@ export class XauthService {
 
   logout() {
     this.tokenService.removeToken();
+    this.authStore.clearUser();
   }
 
 }

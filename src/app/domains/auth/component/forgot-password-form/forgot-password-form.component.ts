@@ -30,26 +30,18 @@ export class ForgotPasswordFormComponent {
   constructor() { }
 
   sendLink() {
-  //   if (this.form.valid) {
-  //     this.status = 'loading';
-  //     const { email } = this.form.getRawValue();
-  //     this.authService.recovery(email)
-  //       .subscribe({
-  //         next: (rta) => {
-  //           this.emailSent = true;
-  //           this.status = 'success';
-  //           const token = rta.recoveryToken;
-  //           console.log(token);
-  //           this.router.navigate(['/recovery'], { queryParams: { token }});
-  //         },
-  //         error: (err) => {
-  //           this.status = 'failed';
-  //           this.errorMessage = err.message;
-  //           console.log(err);
-  //         }
-  //       });
-  //   } else {
-  //     this.form.markAllAsTouched();
-  //   }
+    if (this.form.valid) {
+      this.status = 'loading';
+      const { email } = this.form.getRawValue();
+      
+      // Simulated email sending (no actual backend call)
+      setTimeout(() => {
+        this.emailSent = true;
+        this.status = 'success';
+        console.log(`[Forgot Password UI] Recovery link would be sent to: ${email}`);
+      }, 800);
+    } else {
+      this.form.markAllAsTouched();
+    }
   }
 }

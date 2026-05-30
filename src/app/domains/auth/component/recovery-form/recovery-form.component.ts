@@ -55,27 +55,21 @@ export class RecoveryFormComponent {
     }
 
   recovery() {
-    // if (this.form.valid) {
-    //   const { newPassword } = this.form.getRawValue();
-    //   this.status = 'loading';
-    //   this.authService.changePassword(this.token, newPassword)
-    //     .subscribe({
-    //       next: () => {
-    //         this.status = 'success';
-    //         this.router.navigate(['/login']);
-    //       },
-    //       error: (err) => {
-    //         this.status = 'failed';
-    //         this.form.setErrors({ invalid: true });
-    //         this.errorMessage = err.message;
-    //       },
-    //     });
-    //   this.status = 'loading';
-    //   setTimeout(() => {
-    //     this.status = 'success';
-    //   }, 2000);
-    // } else {
-    //   this.form.markAllAsTouched();
-    // }
+    if (this.form.valid) {
+      this.status = 'loading';
+      const { newPassword } = this.form.getRawValue();
+      
+      // Simulated password reset (no actual backend call)
+      setTimeout(() => {
+        console.log(`[Recovery UI] Password would be reset with token: ${this.token}`);
+        this.status = 'success';
+        // Redirect to login after brief success message
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 1000);
+      }, 800);
+    } else {
+      this.form.markAllAsTouched();
+    }
   }
 }
