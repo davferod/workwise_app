@@ -58,7 +58,7 @@ export class RecoveryFormComponent {
     if (this.form.valid) {
       this.status = 'loading';
       const { newPassword } = this.form.getRawValue();
-      
+
       // Simulated password reset (no actual backend call)
       setTimeout(() => {
         console.log(`[Recovery UI] Password would be reset with token: ${this.token}`);
